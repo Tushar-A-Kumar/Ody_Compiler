@@ -1,0 +1,10 @@
+fn start(){
+	loop(var i = 0 ; i!=10 ; i=i+1){
+		output(i).
+	}
+	var i = 10.
+	loop( ; i!=20 ;){
+		output(i).
+		i=i+1.
+	}
+}

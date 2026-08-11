@@ -1,0 +1,45 @@
+fn start(){
+	var x = 10.
+	var y = 20.
+	
+	output(x-y).
+	
+	output(x+y).
+}
+
+fn start(){
+	var x.
+	input(x).
+	
+	if(x % 2==0) {output("yes").}
+	not{
+	output("NO").
+	}
+}
+
+
+fn start(){
+	loop(var i = 0 ; i!=10){
+		output(i).
+		i++.
+	}
+	var i = 10.
+	loop( ; i!=20){
+		output(i).
+		i++.
+	}
+}
+
+
+fn start(){
+	output("Hello World!").
+}
+
+
+fn start(){
+	var x = 20.
+	var y = "hello".
+	
+	output(x).
+	output(y).
+}

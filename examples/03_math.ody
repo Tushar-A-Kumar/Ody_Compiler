@@ -1,0 +1,8 @@
+fn start(){
+	var x = 10;
+	var y = 20;
+	
+	output(x-y);
+	
+	output(x+y);
+}

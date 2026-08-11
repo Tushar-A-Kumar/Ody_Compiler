@@ -1,0 +1,7 @@
+fn start(){
+	var x = 20;
+	var y = "hello";
+	
+	output(x);
+	output(y);
+}

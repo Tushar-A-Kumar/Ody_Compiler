@@ -1,0 +1,3 @@
+fn start(){
+	output("Hello World!");
+}
