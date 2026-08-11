@@ -29,7 +29,7 @@ public:
     std::vector<Token> tokenize();
     char advance();
     char peek();
-    Token scanString(char);
+    Token scanString();
     Token scanSymbols(char);
     
 };

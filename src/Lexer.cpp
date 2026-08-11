@@ -42,19 +42,21 @@ char Lexer::peek(){
     return source[current];
 }
 
-Token Lexer::scanString(char c){
+Token Lexer::scanString(){
     std::string s="";
-    c = advance();
-    while(!isAtEnd() && c!='"'){
-        s+=c;
-        c = advance();
+    while(!isAtEnd() && peek()!='"'){
+        s+=advance();
     }
+    if(isAtEnd()){
+        return Token(TokenType::ERROR,"Unterminated String",line);
+    }
+    advance();   // moves past second "
     return Token(TokenType::STRING,s,line);
 }
 
 Token Lexer::scanSymbols(char c){
     switch (c) {
-            case '"':return (scanString(c)); //Tokenize strings
+            case '"':return (scanString()); //Tokenize strings
                    
             case '(':return(Token(TokenType::LEFT_PAREN,"(",line));
                     
@@ -96,11 +98,11 @@ Token Lexer::scanSymbols(char c){
                     }
             case '&':{  if(match('&')){
                             return(Token(TokenType::AND,"&&",line));}
-                        else return(Token(TokenType::ERROR,"",line));
+                        else return(Token(TokenType::ERROR,"&",line));
                     }
             case '|':{  if(match('|')){            
                             return(Token(TokenType::OR,"||",line));}
-                        else return(Token(TokenType::ERROR,"",line));
+                        else return(Token(TokenType::ERROR,"|",line));
                     }
             default:std::cout<<"Unexpected Character:"<<c<<" in line:"<<line<<"\n";
          }
@@ -140,9 +142,16 @@ std::vector<Token> Lexer::tokenize()
         }
         else{   //Tokenize symbols and strings 
             if(c==' ' || c=='\r' || c=='\t')continue;
-            else if(c=='\n'){
+            
+            if(c=='\n'){
                 line++;
                 continue;
+            }
+            if(c=='/'){
+                if (peek()=='/'){
+                    while(!isAtEnd() && peek()!='\n')advance();
+                    continue;
+                }
             }
             tokens.push_back(scanSymbols(c));
         }
