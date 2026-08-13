@@ -113,32 +113,28 @@ Token Lexer::scanSymbols(char c){
 std::vector<Token> Lexer::tokenize()
 {
     std::vector<Token> tokens;
+    std::string buff ;
     while(!isAtEnd()){
         char c = advance();
         if(isAlpha(c)){ //Tokenize Keywords and identifiers
-            std::string s ;
-            s+=c;
-            char t = peek();
-            while(!isAtEnd() && isAlNum(t)){
-                t = advance();
-                s+=t;
-                t = peek();
+            buff+=c;
+            while(!isAtEnd() && isAlNum(peek())){
+                buff.push_back(advance());
             };
-            if (mp.count(s)){
-                tokens.push_back(Token(mp[s],s,line));
+            if (mp.count(buff)){
+                tokens.push_back(Token(mp[buff],buff,line));
             }
-            else tokens.push_back(Token(TokenType::IDENTIFIER,s,line));
+            else tokens.push_back(Token(TokenType::IDENTIFIER,buff,line));
+
+            buff.clear();
         }
         else if(isNum(c)){      //Tokenize Numbers 
-            std::string s ;
-            s+=c;
-            char t = peek();
-            while(!isAtEnd() && isNum(t)){
-                t=advance();
-                s+=t;
-                t=peek();
+            buff+=c;
+            while(!isAtEnd() && isNum(peek())){
+                buff.push_back(advance());
             }
-            tokens.push_back(Token(TokenType::NUMBER,s,line));
+            tokens.push_back(Token(TokenType::NUMBER,buff,line));
+            buff.clear();
         }
         else{   //Tokenize symbols and strings 
             if(c==' ' || c=='\r' || c=='\t')continue;
