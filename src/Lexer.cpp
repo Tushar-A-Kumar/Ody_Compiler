@@ -57,6 +57,8 @@ Token Lexer::scanString(){
 Token Lexer::scanSymbols(char c){
     switch (c) {
             case '"':return (scanString()); //Tokenize strings
+
+            case ',':return (Token(TokenType::COMMA,",",line));
                    
             case '(':return(Token(TokenType::LEFT_PAREN,"(",line));
                     
@@ -143,7 +145,7 @@ std::vector<Token> Lexer::tokenize()
                 line++;
                 continue;
             }
-            if(c=='/'){
+            if(c=='/'){   //handles comments , which isnt important for generating asm so its discarded 
                 if (peek()=='/'){
                     while(!isAtEnd() && peek()!='\n')advance();
                     continue;

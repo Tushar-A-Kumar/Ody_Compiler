@@ -21,6 +21,7 @@ enum class TokenType {
     RIGHT_BRACE,
 
     SEMI_COLON,
+    COMMA,
 
     ASSIGN,
     COMPARE,
