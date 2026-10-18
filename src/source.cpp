@@ -18,10 +18,16 @@ int main(int argc , char* argv[]){
     std::string s ,line;
     while(std::getline(file,line)){
         s+=line;
+        s+="\n";
     }
+    // std::cout<<s;
 
     Lexer lexer(s);
     auto tokens = lexer.tokenize();
+
+    // for(auto t : tokens){
+    //     std::cout<<t.lexeme<<" "<<t.line<<"\n";
+    // }
 
     Parser parser(tokens);
     parser.parse();

@@ -42,13 +42,13 @@ Token Parser::consume(TokenType type){
     return Token(TokenType::ERROR,"Unexpected Token",peek().line);
 }
 
-void Parser::parse(){
+void Parser::parse(){  //beginning of parsing
     while (!isAtEnd()) {
         function();
     }
 }
 
-void Parser::function()
+void Parser::function()  //parses function definition and its parameters
 {
     consume(TokenType::FN);
   
@@ -78,20 +78,20 @@ void Parser::function()
     block();
 }
 
-void Parser::block(){
+void Parser::block(){  // parses compound statements
     consume(TokenType::LEFT_BRACE);
     while(!check(TokenType::RIGHT_BRACE) && !isAtEnd()){
         if(check(TokenType::VARIABLE)){
             declaration();
         }
         else{
-            //statement();
+            statement();
         }
     }
     consume(TokenType::RIGHT_BRACE);
 }
 
-void Parser::declaration(){
+void Parser::declaration(){   // parses variable declaration
     consume(TokenType::VARIABLE);
     consume(TokenType::IDENTIFIER);
     if(check(TokenType::ASSIGN)){
@@ -101,7 +101,21 @@ void Parser::declaration(){
     consume(TokenType::SEMI_COLON);
 }
 
-void Parser::expression(){
+void Parser::expression(){  // parses expressions , while also maitaining precedence and stuff , bodmas without powers
+    multi_div();
+    while(match(TokenType::ADD)||match(TokenType::SUB)){
+        multi_div();
+    }
+}
+
+void Parser::multi_div(){
+    term();
+    while(match(TokenType::MUL) || match(TokenType::DIV)){
+        term();
+    }
+}
+
+void Parser::term(){   // most basic value , also used for parsing parantheses 
     if(check(TokenType::NUMBER)){
         consume(TokenType::NUMBER);
     }
@@ -111,8 +125,52 @@ void Parser::expression(){
     else if(check(TokenType::IDENTIFIER)){
         consume(TokenType::IDENTIFIER);
     }
+    else if(check(TokenType::LEFT_PAREN)){
+        consume(TokenType::LEFT_PAREN);
+        expression();
+        consume(TokenType::RIGHT_PAREN);
+    }
     else{
         std::cerr<<"Error: Unexpected error at line "<<peek().line<<"\n";
+        exit(1);
+    }
+}
+
+void Parser::statement(){
+    if(match(TokenType::IDENTIFIER)){   
+        if(check(TokenType::ASSIGN)){
+            consume(TokenType::ASSIGN);
+            expression();
+            consume(TokenType::SEMI_COLON);
+        }
+        else{
+            std::cerr<<"Error: Unexpected error at line "<<peek().line<<"(parser fn: statement())\n";
+            exit(1);
+        }
+    }
+    else{
+        parse_keyword();
+    }
+}
+
+void Parser::parse_keyword(){
+    if(match(TokenType::OUTPUT)){
+        consume(TokenType::LEFT_PAREN);
+        expression();
+        consume(TokenType::RIGHT_PAREN);
+        consume(TokenType::SEMI_COLON);
+    }
+    else if(match(TokenType::INPUT)){
+        consume(TokenType::LEFT_PAREN);
+        consume(TokenType::IDENTIFIER);
+        while (match(TokenType::COMMA)) {
+            consume(TokenType::IDENTIFIER);
+        }
+        consume(TokenType::RIGHT_PAREN);
+        consume(TokenType::SEMI_COLON);
+    }
+    else{
+        std::cerr<<"Error: Unexpected error at line "<<peek().line<<"(parser fn: parse_keyword())\n";
         exit(1);
     }
 }

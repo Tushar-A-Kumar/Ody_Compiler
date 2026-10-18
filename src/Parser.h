@@ -18,10 +18,14 @@ class Parser{
 
         void function();
         void block();
+        
         void declaration();
         void expression();
+        void multi_div();
+        void term();
+        
         void statement();
-    
+        void parse_keyword();
         public:
             Parser(std::vector<Token> tokens);
             void parse();
